@@ -1,17 +1,26 @@
 import { Switch, Route } from 'react-router-dom'
+import { PrivateRoute } from './components/private-route'
 
 import { SignIn, Dashboard, FinancialList } from './pages'
 
 export const Routes = () => {
 	return(
 		<Switch>
-			<Route path='/' exact component={FinancialList} />
-			<Route path='/financial' exact component={FinancialList} />
-			<Route path='/financial/create' component={FinancialList} />
-			<Route path='/financial/edit/:id' component={FinancialList} />
-			<Route path='/financial/delete/:id' component={FinancialList} />
-			<Route path='/dashboard' exact component={Dashboard} />
-			<Route path='/signin' exact component={SignIn} />
+			<PrivateRoute path='/' exact component={FinancialList} />
+
+			<PrivateRoute path='/financial' exact component={FinancialList} />
+
+			<PrivateRoute path='/financial/create' component={FinancialList} />
+
+			<PrivateRoute path='/financial/edit/:id' component={FinancialList} />
+
+			<PrivateRoute path='/financial/delete/:id' component={FinancialList}/>
+
+			<PrivateRoute path='/dashboard' component={Dashboard} />
+
+			<Route path='/signin' exact>
+				<SignIn />
+			</Route>
 		</Switch>
 	)
 }

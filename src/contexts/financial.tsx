@@ -2,6 +2,16 @@
 import React, { createContext, useContext, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
+export interface FilterProps {
+	financialType: 0 | 1 | 2 | 3
+	StartDate?: string
+	EndDate?: string
+	AccountId?: string
+	PageIndex?: number
+	PageSize?: number
+	Search?: string
+}
+
 export type FinancialProps = {
 	expectedValue: number
 	value: number

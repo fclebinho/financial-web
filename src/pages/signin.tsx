@@ -4,6 +4,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Input, Logo } from '../components'
+import { useAuth } from '../contexts/auth'
+import { useHistory } from 'react-router'
 
 
 type SigninFormData = {
@@ -18,14 +20,16 @@ const schema = yup.object().shape({
 
 export const SignIn: React.FC = () => {
   const { colorMode } = useColorMode()
+	const { login, loading } = useAuth()
+	const { push } = useHistory()
 	const { register, handleSubmit, formState } = useForm({
 		resolver: yupResolver(schema)
 	})
 
-	const handleSignin: SubmitHandler<SigninFormData> = async (values) => {
-		await new Promise(resolve => setTimeout(resolve, 2000))
-
-		console.log(values)
+	const handleSignin: SubmitHandler<SigninFormData> = (values) => {
+		login(values).then(data => {
+			push('/')
+		})
 	}
 
 	return(
@@ -39,8 +43,7 @@ export const SignIn: React.FC = () => {
 					<Input type="email" placeholder="E-mail" {...register("email")} error={formState.errors.email}/>	
 					<Input type="password" placeholder="Senha" {...register("password")} error={formState.errors.password}/>
 				</Stack>
-
-				<Button type="submit" mt={6} colorScheme="red" isLoading={formState.isSubmitting}>Entrar</Button>
+				<Button type="submit" mt={6} colorScheme="red" isLoading={formState.isSubmitting || loading}>Entrar</Button>
 			</Flex>
 		</Flex>
 	)
