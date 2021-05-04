@@ -5,6 +5,7 @@ import { NavLink } from './nav-link'
 import { AiOutlineSnippets, AiOutlineWallet } from 'react-icons/ai'
 import { useAccount } from '../../contexts/account'
 import { BiArchive } from 'react-icons/bi'
+import { Droppable } from '../dndkit/ droppable'
 
 export const Sidebar: React.FC = () => {
 	const { items } = useAccount();
@@ -23,17 +24,21 @@ export const Sidebar: React.FC = () => {
 
 				<NavSection title="CARTEIRAS">
 					{items.filter(item => item.accountType === 0).map(item => (
-						<NavLink icon={AiOutlineWallet}>
-							<Text>{item.description}</Text>
-						</NavLink>
+						<Droppable id={item.id} description={item.description}>
+							<NavLink icon={AiOutlineWallet}>
+								<Text>{item.description}</Text>
+							</NavLink>
+						</Droppable>
 					))}
 				</NavSection>
 
 				<NavSection title="OUTRAS CONTAS">
 					{items.filter(item => item.accountType !== 0).map(item => (
-						<NavLink icon={BiArchive}>
-							<Text>{item.description}</Text>
-						</NavLink>
+						<Droppable id={item.id} description={item.description}>
+							<NavLink icon={BiArchive}>
+								<Text>{item.description}</Text>
+							</NavLink>
+						</Droppable>
 					))}
 				</NavSection>
 			</Stack>

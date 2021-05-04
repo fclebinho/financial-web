@@ -11,7 +11,7 @@ export const NavNotification: React.FC = () => {
 		<HStack spacing={8} mx={8} pr={8} py={1} borderRightWidth={2}>
 			<Icon as={RiNotificationLine} fontSize={20}/>
 			<Icon as={RiUserAddLine} fontSize={20}/>
-			<IconButton onClick={toggleColorMode} aria-label="Light theme">{colorMode === "light" ? <Icon as={BiSun}/> : <Icon as={BiMoon}/>}</IconButton>
+			<IconButton bg="none" fontSize={20} onClick={toggleColorMode} aria-label="Light theme">{colorMode === "light" ? <Icon as={BiMoon}/> : <Icon as={BiSun}/>}</IconButton>
 		</HStack>
 	)
 }

@@ -1,3 +1,4 @@
+export { ConfirmButton } from './confirm-button'
 export { Input } from './input'
 export { Header } from './header'
 export { Sidebar } from './sidebar'

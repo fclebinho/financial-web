@@ -1,15 +1,44 @@
-import React from 'react'
-import { Box, Button, Flex, Heading, HStack, Icon, IconButton, Table, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useColorMode, useDisclosure } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { Box, Flex, Heading, Table, Tbody, Td, Th, Thead, Tr, useColorMode, useToast } from '@chakra-ui/react'
 import { Header, Sidebar } from '../../components'
-import { RiAddLine, RiMoneyCnyBoxFill, RiPencilLine, RiTrainLine, RiWaterFlashLine } from 'react-icons/ri'
 import { useFinancial } from '../../contexts/financial'
-import { format, formatDistance, subDays } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR/index'
-import { CreateFinancial } from './create'
+import { FinancialCreate } from './components/create'
+import { useAccount } from '../../contexts'
+import { useHistory, useLocation, useParams } from 'react-router'
+import { TableColumnDescription } from './components/table/colunms/description'
+import { TableColumnDate } from './components/table/colunms/date'
+import { TableColumnAmount } from './components/table/colunms/amount'
+import { TableColumnNavbar } from './components/table/colunms/navbar'
 
 export const FinancialList: React.FC = () => {
-	const { items } = useFinancial()
+	const { pathname } = useLocation();
+	const { items, exclude, remove } = useFinancial()
+	const { dragEnd } = useAccount()
+	const toast = useToast()
 	const { colorMode } = useColorMode()
+	const [isCreate, setIsCreate] = useState(false)
+	const { id } = useParams<{ id: string }>()
+  const { push } = useHistory();
+
+	useEffect(() => {
+		if (dragEnd) {
+			const { over, active: { id } } = dragEnd
+			id && exclude(id).then(() => {
+				if (over && over.data && over.data.current) {
+					const { data: { current: { description } } } = over
+
+					toast({
+						title: `Lançamento movido para conta ${description.toLowerCase()}.`,
+						position: "top",
+						isClosable: true,
+					})
+				}
+
+			})
+		}
+	}, [dragEnd])
+
+	useEffect(() => setIsCreate(pathname.split('/').includes('create') || pathname.split('/').includes('edit')), [pathname])
 
 	return (
 		<Box>
@@ -20,7 +49,7 @@ export const FinancialList: React.FC = () => {
 						<Flex mb={8} justify="space-between" align="center">
 							<Heading size="sm" fontWeight="normal"></Heading>
 
-							<CreateFinancial />
+							<FinancialCreate open={isCreate} />
 						</Flex>
 
 						<Table>
@@ -29,23 +58,27 @@ export const FinancialList: React.FC = () => {
 									<Th>Descrição</Th>
 									<Th>Data de cadastro</Th>
 									<Th>Valor</Th>
+									<Th></Th>
 								</Tr>
 							</Thead>
 							<Tbody>
 								{items.map(item => (
-									<Tr key={item.id}>
-										<Td>
-											<Box>
-												<Text fontWeight="bold">{item.description}</Text>
-												<Text fontSize="sm">{item.id}</Text>
-											</Box>
-										</Td>
-										<Td>
-											<Text fontWeight="bold">{format(new Date(item.dueDate), 'dd/MM/yyyy')}</Text>
-											<Text fontSize="sm">{formatDistance(subDays(new Date(item.dueDate), 3), new Date(item.dueDate), { addSuffix: true, locale: ptBR})}</Text>
-										</Td>
-										<Td>{item.value}</Td>
-									</Tr>
+									<>
+										<Tr key={item.id}>
+											<Td>
+												<TableColumnDescription item={item} />
+											</Td>
+											<Td>
+												<TableColumnDate item={item} />
+											</Td>
+											<Td textAlign="end">
+												<TableColumnAmount item={item} />
+											</Td>
+											<Td>
+												<TableColumnNavbar item={item} />
+											</Td>
+										</Tr>
+									</>
 								))}
 							</Tbody>
 						</Table>
