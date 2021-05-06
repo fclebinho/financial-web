@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, FormLabel, Input, Stack } from '@chakra-ui/react'
 import { FinancialProps } from '../../../contexts/financial'
 import { useForm } from 'react-hook-form'
+import { DateInput, MoneyInput } from 'react-hook-form-chakra-fields'
 
 interface FinancialFormProps {
 	open: boolean
@@ -44,7 +45,6 @@ export const FinancialForm: React.FC<FinancialFormProps> = ({ open, financial, i
 							<Box>
 								<FormLabel htmlFor="description">description</FormLabel>
 								<Input
-									size="sm"
 									id="description"
 									placeholder="Please enter user name"
 									defaultValue={financial && financial.description}
@@ -54,50 +54,22 @@ export const FinancialForm: React.FC<FinancialFormProps> = ({ open, financial, i
 
 							<Box>
 								<FormLabel htmlFor="value">value</FormLabel>
-								<Input
-									size="sm"
-									id="value"
-									placeholder="Please enter user name"
-									defaultValue={financial && financial.value}
-									{...register("value", {
-										valueAsNumber: true,
-									})}
-								/>
+								<MoneyInput value={financial ? financial.value : 0} {...register("value")}/>
 							</Box>
 
 							<Box>
 								<FormLabel htmlFor="expectedValue">expectedValue</FormLabel>
-								<Input
-									size="sm"
-									id="expectedValue"
-									placeholder="Please enter user name"
-									defaultValue={financial && financial.expectedValue}
-									{...register("expectedValue", {
-										valueAsNumber: true,
-									})}
-								/>
+								<MoneyInput value={financial ? financial.expectedValue : 0} {...register("expectedValue")}/>
 							</Box>
 
 							<Box>
 								<FormLabel htmlFor="dueDate">dueDate</FormLabel>
-								<Input
-									size="sm"
-									id="dueDate"
-									placeholder="Please enter user name"
-									defaultValue={financial && financial.dueDate}
-									{...register("dueDate")}
-								/>
+								<DateInput value={financial ? financial.dueDate : (new Date()).toISOString()} {...register("dueDate")}/>
 							</Box>
 
 							<Box>
 								<FormLabel htmlFor="date">date</FormLabel>
-								<Input
-									size="sm"
-									id="date"
-									placeholder="Please enter user name"
-									defaultValue={financial && financial.date}
-									{...register("date")}
-								/>
+								<DateInput value={financial ? financial.date : (new Date()).toISOString()} {...register("date")}/>
 							</Box>
 
 							<Box hidden={true}>
