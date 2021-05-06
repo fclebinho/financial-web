@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Table, Tbody, Td, Th, Thead, Tr, useColorMode, useToast } from '@chakra-ui/react'
+import { Box, Flex, Spinner, Table, Tbody, Td, Th, Thead, Tr, useColorMode, useToast } from '@chakra-ui/react'
 import { Header, PeriodDate, Sidebar } from '../../components'
 import { useFinancial } from '../../contexts/financial'
 import { FinancialCreate } from './components/create'
@@ -10,6 +10,7 @@ import { TableColumnDescription } from './components/table/colunms/description'
 import { TableColumnDate } from './components/table/colunms/date'
 import { TableColumnAmount } from './components/table/colunms/amount'
 import { TableColumnNavbar } from './components/table/colunms/navbar'
+import useInfiniteScroll from 'react-infinite-scroll-hook'
 
 interface PeriodProps {
 	start: string
@@ -17,8 +18,9 @@ interface PeriodProps {
 }
 
 export const FinancialList: React.FC = () => {
+	const {  } = useFinancial()
 	const { pathname } = useLocation();
-	const { items, exclude, getAll } = useFinancial()
+	const { loading, items, hasNextPage, error, exclude, getAll} = useFinancial()
 	const { dragEnd } = useAccount()
 	const toast = useToast()
 	const { colorMode } = useColorMode()
@@ -73,7 +75,26 @@ export const FinancialList: React.FC = () => {
 		setPeriod({ start: startDate, end: endDate })
 		console.log(period)
 	}
+
+	const handleOnClick = () => {
+		if (!period) return
+
+		setPageIndex((index) => index + 1)
+		getAll({
+				financialType: 0,
+				StartDate: period.start,
+				EndDate: period.end,
+				PageIndex: pageIndex,
+		})
+	}
         
+	const [sentryRef] = useInfiniteScroll({
+		loading,
+		hasNextPage,
+		onLoadMore: handleOnClick,
+		disabled: !!error,
+		rootMargin: '0px 0px 400px 0px',
+	})
 
 	return (
 		<Box>
@@ -122,6 +143,18 @@ export const FinancialList: React.FC = () => {
 								))}
 							</Tbody>
 						</Table>
+
+						{(loading || hasNextPage) && (
+							<Flex ref={sentryRef} align="center" justify="center" m={6}>
+								<Spinner
+									thickness="4px"
+									speed="0.65s"
+									emptyColor="gray.200"
+									color="blue.500"
+									size="lg"
+								/>
+							</Flex>
+            )}
 					</Box>
 				</Flex>
 		</Box>

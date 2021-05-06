@@ -28,6 +28,7 @@ export const TableColumnDescription: React.FC<TableColumnDescriptionProps> = ({ 
 				</Text>
 				<Icon fontSize={12} fontWeight="normal" color="gray.500" as={FiMousePointer}/>
 			</HStack>
+			<Text fontSize="sm">{item.id}</Text>
 		</Box>
 	)
 }

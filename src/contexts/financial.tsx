@@ -25,7 +25,10 @@ export type FinancialProps = {
 }
 
 interface FinancialContextProps {
+	loading: boolean
 	items: FinancialProps[]
+	hasNextPage: boolean
+	error: boolean
 	getById(id: string): void
 	getAll(filters: FilterProps): Promise<any>
 	create(financial: FinancialProps): Promise<void>
@@ -39,48 +42,8 @@ const context = createContext<FinancialContextProps>({} as FinancialContextProps
 export const FinancialProvider: React.FC = ({ children }) => {
 	const [loading, setLoading] = useState(false)
 	const [hasNextPage, setHasNextPage] = useState(false)
-	const [items, setItems] = useState<FinancialProps[]>([
-		{
-			expectedValue: 58.09,
-			value: 58.09,
-			dueDate: "2021-04-24T00:20:21.288",
-			date: "2021-04-24T00:20:21.288",
-			financialType: 0,
-			description: "Supermercado Condor",
-			id: "f19f0f80-1b04-487e-8369-e3eade8e2b9f",
-			createdAt: "2021-04-26T04:13:40.858077"
-		},
-		{
-			expectedValue: 58.09,
-			value: 58.09,
-			dueDate: "2021-04-24T00:20:21.288",
-			date: "2021-04-24T00:20:21.288",
-			financialType: 0,
-			description: "Shopping Estação",
-			id: "6a9fb1a6-76c4-4784-b067-f127fd800031",
-			createdAt: "2021-04-26T04:13:44.093099"
-		},
-		{
-			expectedValue: 58.09,
-			value: 58.09,
-			dueDate: "2021-04-26T00:20:21.288",
-			date: "2021-04-26T00:20:21.288",
-			financialType: 0,
-			description: "Coritiba Futebol Clube",
-			id: "e90e8536-0fc6-432e-9d5b-f1748ccfa239",
-			createdAt: "2021-04-26T04:13:47.405891"
-		},
-		{
-			expectedValue: 9999866.87,
-			value: 9999866.87,
-			dueDate: "2021-04-29T00:20:21.288",
-			date: "2021-04-29T00:20:21.288",
-			financialType: 0,
-			description: "Casa China",
-			id: "ef1f135d-44bc-438b-aa7d-5b8c136da2cd",
-			createdAt: "2021-04-26T04:13:50.629166"
-		}
-	])
+	const [error, setError] = useState(false)
+	const [items, setItems] = useState<FinancialProps[]>([])
 
 	const getById = (id: string) => {}
 
@@ -104,7 +67,7 @@ export const FinancialProvider: React.FC = ({ children }) => {
 								// })
 								reject(statusText)
 				}
-		})
+		}).finally(() => setLoading(false))
 })
 
 	const create = async (financial: FinancialProps): Promise<void> => {
@@ -163,7 +126,7 @@ export const FinancialProvider: React.FC = ({ children }) => {
 	const exclude = async (id: string): Promise<void> => new Promise(resolve => resolve(setItems(items => items.filter(item => item.id !== id))))
 
 	return (
-		<context.Provider value={{ items, getById, getAll, create, update, remove, exclude }}>
+		<context.Provider value={{ loading, items, hasNextPage, error, getById, getAll, create, update, remove, exclude }}>
 			{children}
 		</context.Provider>
 	)
