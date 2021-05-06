@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Heading, Table, Tbody, Td, Th, Thead, Tr, useColorMode, useToast } from '@chakra-ui/react'
-import { Header, Sidebar } from '../../components'
+import { Box, Flex, Table, Tbody, Td, Th, Thead, Tr, useColorMode, useToast } from '@chakra-ui/react'
+import { Header, PeriodDate, Sidebar } from '../../components'
 import { useFinancial } from '../../contexts/financial'
 import { FinancialCreate } from './components/create'
 import { FinancialUpdate } from './components/update'
@@ -25,10 +25,7 @@ export const FinancialList: React.FC = () => {
 	const [isCreate, setIsCreate] = useState<string>("undefined")
 	const { id } = useParams<{ id: string }>()
   const { push } = useHistory();
-	const [period, setPeriod] = useState<PeriodProps | undefined>({
-		start: "2021-04-05T00:03:21.751Z",
-		end: "2021-05-05T00:03:21.751Z"
-	})
+	const [period, setPeriod] = useState<PeriodProps | undefined>(undefined)
 	const [pageIndex, setPageIndex] = useState(2)
 
 	useEffect(() => {
@@ -72,6 +69,12 @@ export const FinancialList: React.FC = () => {
 		console.log('useEffect', 'pathname', pathname, isCreate)
 	}, [pathname])
 
+	const handleOnSelected = (startDate: string, endDate: string): void => {
+		setPeriod({ start: startDate, end: endDate })
+		console.log(period)
+	}
+        
+
 	return (
 		<Box>
 				<Header />
@@ -79,10 +82,14 @@ export const FinancialList: React.FC = () => {
 					<Sidebar />
 					<Box flex={1} borderRadius={8} bg={colorMode === "light" ? "gray.50" : "gray.700"} p="8" pb={28}>
 						<Flex mb={8} justify="space-between" align="center">
-							<Heading size="sm" fontWeight="normal"></Heading>
-
-							<FinancialCreate />
-							<FinancialUpdate />
+							<Box />
+							<Box>
+								<PeriodDate onSelected={handleOnSelected} />
+							</Box>
+							<Box>
+								<FinancialCreate />
+								<FinancialUpdate />
+							</Box>
 						</Flex>
 
 						<Table>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react';
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { RiAddLine } from 'react-icons/ri';
 import { FinancialForm } from './form';
 import { useFinancial } from '../../../contexts';
