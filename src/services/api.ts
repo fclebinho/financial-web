@@ -1,14 +1,10 @@
 import axios from 'axios'
 import { env } from 'node:process'
-
-const CONSTS = {
-    AUTH_USER: '@App:user',
-    AUTH_TOKEN: '@App:token',
-}
+import { consts } from './auth'
 
 const ClearStorage = () => {
-    sessionStorage.removeItem(CONSTS.AUTH_USER)
-    sessionStorage.removeItem(CONSTS.AUTH_TOKEN)
+    localStorage.removeItem(consts.AUTH_USER)
+    localStorage.removeItem(consts.AUTH_TOKEN)
 }
 
 export const api = axios.create({
@@ -19,9 +15,11 @@ export const api = axios.create({
 // Add a request interceptor
 api.interceptors.request.use(
     (config) => {
-        const storagedToken = sessionStorage.getItem(CONSTS.AUTH_TOKEN)
+        const storagedToken = localStorage.getItem(consts.AUTH_TOKEN)
 
-        if (storagedToken) return config
+				console.log('pi.interceptors.request.use', 'antes', storagedToken)
+        if (!!!storagedToken) return config
+				console.log('pi.interceptors.request.use', 'depois')
 
         // Do something before request is sent
         return {

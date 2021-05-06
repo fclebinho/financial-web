@@ -2,6 +2,8 @@ import { AxiosResponse } from 'axios'
 import { FinancialProps, FilterProps } from '../contexts/financial'
 import api from './api'
 
+export const getById = (id: string): Promise<AxiosResponse<any>> => api.get(`/api/financial/${id}`)
+
 export const getAll = (filters: FilterProps): Promise<AxiosResponse<any>> => {
     const filter = [`FinancialTypes=${filters.financialType}`]
     filter.push(`PageSize=${filters.PageSize || 20}`)
@@ -11,6 +13,10 @@ export const getAll = (filters: FilterProps): Promise<AxiosResponse<any>> => {
 
     return api.get(`/api/financial?${filter.join('&')}`)
 }
+
+export const create = (
+	financial: FinancialProps
+): Promise<AxiosResponse<any>> => api.post('/api/financial', financial)
 
 export const update = (
     financial: FinancialProps

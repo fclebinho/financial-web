@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 
 interface FinancialFormProps {
 	open: boolean
-	financial: FinancialProps
+	financial?: FinancialProps
 	isLoading: boolean
 	onClose(): void
 	onConfirm(financial: FinancialProps): void
@@ -47,7 +47,7 @@ export const FinancialForm: React.FC<FinancialFormProps> = ({ open, financial, i
 									size="sm"
 									id="description"
 									placeholder="Please enter user name"
-									defaultValue={financial.description}
+									defaultValue={financial && financial.description}
 									{...register("description")}
 								/>
 							</Box>
@@ -58,8 +58,10 @@ export const FinancialForm: React.FC<FinancialFormProps> = ({ open, financial, i
 									size="sm"
 									id="value"
 									placeholder="Please enter user name"
-									defaultValue={financial.value}
-									{...register("value")}
+									defaultValue={financial && financial.value}
+									{...register("value", {
+										valueAsNumber: true,
+									})}
 								/>
 							</Box>
 
@@ -69,8 +71,10 @@ export const FinancialForm: React.FC<FinancialFormProps> = ({ open, financial, i
 									size="sm"
 									id="expectedValue"
 									placeholder="Please enter user name"
-									defaultValue={financial.expectedValue}
-									{...register("expectedValue")}
+									defaultValue={financial && financial.expectedValue}
+									{...register("expectedValue", {
+										valueAsNumber: true,
+									})}
 								/>
 							</Box>
 
@@ -80,7 +84,7 @@ export const FinancialForm: React.FC<FinancialFormProps> = ({ open, financial, i
 									size="sm"
 									id="dueDate"
 									placeholder="Please enter user name"
-									defaultValue={financial.dueDate}
+									defaultValue={financial && financial.dueDate}
 									{...register("dueDate")}
 								/>
 							</Box>
@@ -91,19 +95,21 @@ export const FinancialForm: React.FC<FinancialFormProps> = ({ open, financial, i
 									size="sm"
 									id="date"
 									placeholder="Please enter user name"
-									defaultValue={financial.date}
+									defaultValue={financial && financial.date}
 									{...register("date")}
 								/>
 							</Box>
 
-							<Box>
+							<Box hidden={true}>
 								<FormLabel htmlFor="financialType">financialType</FormLabel>
 								<Input
 									size="sm"
 									id="financialType"
 									placeholder="Please enter user name"
-									defaultValue={financial.financialType}
-									{...register("financialType")}
+									defaultValue={financial && financial.financialType}
+									{...register("financialType", {
+										valueAsNumber: true,
+									})}
 								/>
 							</Box>
 

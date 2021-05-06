@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react';
-import { useHistory, useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router';
 import { RiAddLine } from 'react-icons/ri';
 import { FinancialForm } from './form';
 import { useFinancial } from '../../../contexts';
 import { FinancialProps } from '../../../contexts/financial';
 
-interface CreateFinancialProps {
-	open: boolean
-}
+interface UpdateFinancialProps {}
 
 const FINANCIAL = {
 	expectedValue: 0,
@@ -19,30 +17,37 @@ const FINANCIAL = {
 	description: ""
 }
 
-export const FinancialCreate: React.FC<CreateFinancialProps> = ({ open }) => {
+export const FinancialCreate: React.FC<UpdateFinancialProps> = () => {
   const { push } = useHistory();
-	const { id } = useParams<{ id: string }>()
+	const { pathname } = useLocation()
 	const { create } = useFinancial()
 	const [isLoading, setIsLoading] = useState(false)
+	const [financial, setFinancial] = useState<FinancialProps>(FINANCIAL)
+	const [opened, setOpened] = useState(false)
 
-	const handleOnClose = () => push('/financial')
+	const handleOnClose = () => {
+		setFinancial(FINANCIAL)
+		push('/financial')
+	}
 
 	const handleConfirm = (financial: FinancialProps) => {
 		setIsLoading(true)
 		create(financial).then(() => {
-			console.log('promise')
+			setFinancial(FINANCIAL)
 			push('/financial')
 		}).finally(() => setIsLoading(false))
 	}
 
-	useEffect(() => console.log(id), [id])
+	useEffect(() => setOpened(pathname.split('/').includes('create')), [pathname])
+
+	// useEffect(() => setFinancial(FINANCIAL), [open])
 
 	return (
 		<>
 			<Button leftIcon={<RiAddLine />} size="sm" colorScheme="red" onClick={() => {	push('/financial/create')}}>
       	Criar novo
       </Button>
-			<FinancialForm isLoading={isLoading} financial={FINANCIAL} open={open} onClose={handleOnClose} onConfirm={handleConfirm}/>
+			{opened && <FinancialForm isLoading={isLoading} financial={financial} open={true} onClose={handleOnClose} onConfirm={handleConfirm}/>}
 		</>
 	)
 }

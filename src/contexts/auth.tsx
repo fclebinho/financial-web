@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import { loginAuth, logoutAuth, tokenAuth } from '../services'
 
 export interface CredentialProps {

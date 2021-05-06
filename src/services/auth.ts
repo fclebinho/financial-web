@@ -49,9 +49,9 @@ export const logout = () => {
 	localStorage.removeItem(consts.AUTH_TOKEN)
 }
 
-export const token = (): string  => {
+export const token = (): any  => {
 	const storagedToken = localStorage.getItem(consts.AUTH_TOKEN)
-	return storagedToken ? storagedToken : '' 
+	return storagedToken ? storagedToken : null 
 }
 
 export const profile = () => new Promise<ProfileProps | null>((resolve, reject) => {
